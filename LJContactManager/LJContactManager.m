@@ -190,7 +190,7 @@
     }];
 }
 
-- (void)accessSortContactsComplection:(void (^)(BOOL, NSArray<LJSectionPerson *> *, NSArray<NSString *> *))completcion
+- (void)accessSectionContactsComplection:(void (^)(BOOL, NSArray<LJSectionPerson *> *, NSArray<NSString *> *))completcion
 {
     [self _authorizationStatus:^(BOOL authorization) {
         
@@ -595,6 +595,13 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
             [LJContactManager sharedInstance].contactsChangeHanlder(succeed, contacts);
         }
     }];
+    
+    [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
+        if ([LJContactManager sharedInstance].sectionContactsHanlder)
+        {
+            [LJContactManager sharedInstance].sectionContactsHanlder(succeed, contacts, keys);
+        }
+    }];
 }
 
 - (void)_contactStoreDidChange
@@ -604,6 +611,13 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
         {
             [LJContactManager sharedInstance].contactsChangeHanlder(succeed, contacts);
         }
+    }];
+    
+    [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
+         if ([LJContactManager sharedInstance].sectionContactsHanlder)
+         {
+            [LJContactManager sharedInstance].sectionContactsHanlder(succeed, contacts, keys);
+         }
     }];
 }
 

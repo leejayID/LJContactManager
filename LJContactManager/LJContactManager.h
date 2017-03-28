@@ -15,14 +15,14 @@
 + (instancetype)sharedInstance;
 
 /**
- 通讯录变更回调（未排序的通讯录）
+ 通讯录变更回调（未分组的通讯录）
  */
 @property (nonatomic, copy) void (^contactsChangeHanlder) (BOOL succeed, NSArray <LJPerson *> *newContacts);
 
 /**
- 通讯录变更回调（已经排序的通讯录）
+ 通讯录变更回调（已分组的通讯录）
  */
-@property (nonatomic, copy) void (^sectionContactsHanlder) (BOOL succeed, NSArray <LJSectionPerson *> *newSectionContacts);
+@property (nonatomic, copy) void (^sectionContactsHanlder) (BOOL succeed, NSArray <LJSectionPerson *> *newSectionContacts, NSArray <NSString *> *keys);
 
 /**
  选择联系人
@@ -50,17 +50,17 @@
 - (void)addToExistingContactsWithPhoneNum:(NSString *)phoneNum controller:(UIViewController *)controller;
 
 /**
- 获取联系人列表（未排序的通讯录）
+ 获取联系人列表（未分组的通讯录）
  
  @param completcion 回调
  */
 - (void)accessContactsComplection:(void (^)(BOOL succeed, NSArray <LJPerson *> *contacts))completcion;
 
 /**
- 获取联系人列表（已排序的通讯录）
+ 获取联系人列表（已分组的通讯录）
 
  @param completcion 回调
  */
-- (void)accessSortContactsComplection:(void (^)(BOOL succeed, NSArray <LJSectionPerson *> *contacts, NSArray <NSString *> *keys))completcion;
+- (void)accessSectionContactsComplection:(void (^)(BOOL succeed, NSArray <LJSectionPerson *> *contacts, NSArray <NSString *> *keys))completcion;
 
 @end
