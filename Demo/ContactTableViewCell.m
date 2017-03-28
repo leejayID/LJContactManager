@@ -21,7 +21,7 @@
 
 - (void)setModel:(LJPerson *)model
 {
-    self.iconImageV.image = model.imageData ? [UIImage imageWithData:model.imageData] : [UIImage imageNamed:@"hand portrait"];
+    self.iconImageV.image = model.image ? model.image : [UIImage imageNamed:@"hand portrait"];
     self.nameLabel.text = model.fullName;
     LJPhone *phoneModel = model.phones.firstObject;
     self.phoneNumLabel.text = phoneModel.phone;

@@ -62,11 +62,13 @@
         if ([contact isKeyAvailable:CNContactImageDataKey])
         {
             self.imageData = contact.imageData;
+            self.image = [UIImage imageWithData:contact.imageData];
         }
         
         if ([contact isKeyAvailable:CNContactThumbnailImageDataKey])
         {
             self.thumbnailImageData = contact.thumbnailImageData;
+            self.thumbnailImage = [UIImage imageWithData:contact.thumbnailImageData];
         }
         
         if ([contact isKeyAvailable:CNContactPhoneNumbersKey])
@@ -200,7 +202,9 @@
         self.phoneticMiddleName = phoneticMiddleName;
         self.phoneticGivenName = phoneticGivenName;
         self.imageData = imageData;
+        self.image = [UIImage imageWithData:imageData];
         self.thumbnailImageData = thumbnailImageData;
+        self.thumbnailImage = [UIImage imageWithData:thumbnailImageData];
 
         // 号码
         ABMultiValueRef multiPhones = ABRecordCopyValue(record, kABPersonPhoneProperty);

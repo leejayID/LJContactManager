@@ -6,7 +6,7 @@
 //  Copyright © 2017年 LeeJay. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <AddressBook/AddressBook.h>
 #import <Contacts/Contacts.h>
 
@@ -96,14 +96,24 @@ typedef NS_ENUM(NSUInteger, LJContactType)
 @property (nonatomic, copy) NSString *phoneticFamilyName;
 
 /**
- 头像
+ 头像 Data
  */
 @property (nonatomic, copy) NSData *imageData;
 
 /**
- 头像的缩略图
+ 头像图片
+ */
+@property (nonatomic, strong) UIImage *image;
+
+/**
+ 头像的缩略图 Data
  */
 @property (nonatomic, copy) NSData *thumbnailImageData;
+
+/**
+ 头像缩略图片
+ */
+@property (nonatomic, strong) UIImage *thumbnailImage;
 
 /**
  电话号码数组
