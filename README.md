@@ -6,6 +6,22 @@
 
 LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 AddressBook 和 AddressUI 系统库，iOS 9 之后使用苹果新推出的 Contacts 和 ContactsUI 框架。
 
+## 安装
+
+### CocoaPods
+
+1. 在 Podfile 中添加  `pod 'LJContactManager'`。
+2. 执行 `pod install` 或 `pod update`。
+3. 导入 \<LJContactManager.h\>。
+
+### 手动安装
+
+1. 下载 LJContactManager 文件夹内的所有内容。
+2. 将 LJContactManager 内的源文件添加(拖放)到你的工程。
+3. 导入 `LJContactManager.h`。
+
+## 使用
+
 主要提供以下的方法：
 
 * 选择联系人
@@ -21,6 +37,8 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
                       complection:(void (^)(NSString *name, NSString *phone))completcion;
 ```
 
+![](http://upload-images.jianshu.io/upload_images/1321491-f2d513a6e5c7959d.gif?imageMogr2/auto-orient/strip)
+
 * 创建新联系人
 
 ```objc
@@ -32,6 +50,8 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
  */
 - (void)createNewContactWithPhoneNum:(NSString *)phoneNum controller:(UIViewController *)controller;
 ```
+
+![](http://upload-images.jianshu.io/upload_images/1321491-3f02dc899eedb2c8.gif?imageMogr2/auto-orient/strip)
 
 * 添加到现有联系人
 
@@ -45,6 +65,8 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 - (void)addToExistingContactsWithPhoneNum:(NSString *)phoneNum controller:(UIViewController *)controller;
 ```
 
+![](http://upload-images.jianshu.io/upload_images/1321491-8108d6477fd5bba8.gif?imageMogr2/auto-orient/strip)
+
 * 获取联系人列表（未排序的通讯录）
 
 ```objc
@@ -56,6 +78,8 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 - (void)accessContactsComplection:(void (^)(BOOL succeed, NSArray <LJPerson *> *contacts))completcion;
 ```
 
+![](http://upload-images.jianshu.io/upload_images/1321491-342699365346068a.gif?imageMogr2/auto-orient/strip)
+
 * 获取联系人列表（已排序的通讯录）
 
 ```objc
@@ -66,6 +90,8 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
  */
 - (void)accessSectionContactsComplection:(void (^)(BOOL succeed, NSArray <LJSectionPerson *> *contacts, NSArray <NSString *> *keys))completcion;
 ```
+
+![](http://upload-images.jianshu.io/upload_images/1321491-048f8c4c3f96df85.gif?imageMogr2/auto-orient/strip)
 
 * 通讯录变更回调（未排序的通讯录）
 
@@ -84,20 +110,6 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
  */
 @property (nonatomic, copy) void (^sectionContactsHanlder) (BOOL succeed, NSArray <LJSectionPerson *> *newSectionContacts, NSArray <NSString *> *keys);
 ```
-
-## 安装
-
-### CocoaPods
-
-1. 在 Podfile 中添加  `pod 'LJContactManager'`。
-2. 执行 `pod install` 或 `pod update`。
-3. 导入 \<LJContactManager.h\>。
-
-### 手动安装
-
-1. 下载 LJContactManager 文件夹内的所有内容。
-2. 将 LJContactManager 内的源文件添加(拖放)到你的工程。
-3. 导入 `LJContactManager.h`。
 
 ## 系统要求
 
