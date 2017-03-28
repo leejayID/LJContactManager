@@ -6,8 +6,6 @@
 
 LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 AddressBook 和 AddressUI 系统库，iOS 9 之后使用苹果新推出的 Contacts 和 ContactsUI 框架。
 
-==============
-
 主要提供以下的方法：
 
 * 选择联系人
@@ -88,7 +86,6 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 ```
 
 ## 安装
-==============
 
 ### CocoaPods
 
@@ -103,12 +100,10 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 3. 导入 `LJContactManager.h`。
 
 ## 系统要求
-==============
 
 该项目最低支持 iOS 8.0 和 Xcode 7.0。
 
 ## 相关文章
-==============
 
 
 
