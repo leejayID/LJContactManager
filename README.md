@@ -67,7 +67,7 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 
 ![](http://upload-images.jianshu.io/upload_images/1321491-8108d6477fd5bba8.gif?imageMogr2/auto-orient/strip)
 
-* 获取联系人列表（未排序的通讯录）
+* 获取联系人列表（未分组的通讯录）
 
 ```objc
 /**
@@ -78,9 +78,9 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 - (void)accessContactsComplection:(void (^)(BOOL succeed, NSArray <LJPerson *> *contacts))completcion;
 ```
 
-![](http://upload-images.jianshu.io/upload_images/1321491-342699365346068a.gif?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/1321491-bcc3c9ec2339a87c.gif?imageMogr2/auto-orient/strip)
 
-* 获取联系人列表（已排序的通讯录）
+* 获取联系人列表（已分组的通讯录）
 
 ```objc
 /**
@@ -91,9 +91,9 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 - (void)accessSectionContactsComplection:(void (^)(BOOL succeed, NSArray <LJSectionPerson *> *contacts, NSArray <NSString *> *keys))completcion;
 ```
 
-![](http://upload-images.jianshu.io/upload_images/1321491-048f8c4c3f96df85.gif?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/1321491-a4df44dca74e8f47.gif?imageMogr2/auto-orient/strip)
 
-* 通讯录变更回调（未排序的通讯录）
+* 通讯录变更回调（未分组的通讯录）
 
 ```objc
 /**
