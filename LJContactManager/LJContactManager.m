@@ -172,7 +172,6 @@
             {
                 [self _asynAccessContactStoreWithSort:NO completcion:^(NSArray *datas, NSArray *keys) {
                 
-            
                     if (completcion)
                     {
                         completcion(YES, datas);
@@ -263,11 +262,11 @@
     CNContact *contact = contactProperty.contact;
     NSString *name = [CNContactFormatter stringFromContact:contact style:CNContactFormatterStyleFullName];
     CNPhoneNumber *phoneValue= contactProperty.value;
-    NSString *phoneNumer = phoneValue.stringValue;
+    NSString *phoneNumber = phoneValue.stringValue;
     
     if (self.handler)
     {
-        self.handler(name, phoneNumer);
+        self.handler(name, phoneNumber);
     }
 }
 
