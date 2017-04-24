@@ -13,15 +13,17 @@
 #import "LJPeoplePickerDelegate.h"
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
+#import "LJPickerDetailDelegate.h"
 
 #define IOS9_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
 
-@interface LJContactManager () <ABPeoplePickerNavigationControllerDelegate, ABNewPersonViewControllerDelegate, CNContactViewControllerDelegate, CNContactPickerDelegate>
+@interface LJContactManager () <ABNewPersonViewControllerDelegate, CNContactViewControllerDelegate>
 
 @property (nonatomic, copy) void (^handler) (NSString *, NSString *);
 @property (nonatomic, assign) BOOL isAdd;
 @property (nonatomic, copy) NSArray *keys;
 @property (nonatomic, strong) LJPeoplePickerDelegate *pickerDelegate;
+@property (nonatomic, strong) LJPickerDetailDelegate *pickerDetailDelegate;
 @property (nonatomic) ABAddressBookRef addressBook;
 
 @end
@@ -42,7 +44,7 @@
         }
         else
         {
-            self.addressBook = ABAddressBookCreate();
+            _addressBook = ABAddressBookCreate();
             ABAddressBookRegisterExternalChangeCallback(self.addressBook, _addressBookChange, nil);
         }
     }
@@ -94,6 +96,19 @@
         _pickerDelegate = [LJPeoplePickerDelegate new];
     }
     return _pickerDelegate;
+}
+
+- (LJPickerDetailDelegate *)pickerDetailDelegate
+{
+    if (!_pickerDetailDelegate)
+    {
+        _pickerDetailDelegate = [LJPickerDetailDelegate new];
+        __weak typeof(self) weakSelf = self;
+        _pickerDetailDelegate.handler = ^(NSString *name, NSString *phoneNum) {
+            weakSelf.handler(name, phoneNum);
+        };
+    }
+    return _pickerDetailDelegate;
 }
 
 #pragma mark - Public
@@ -226,48 +241,11 @@
     }];
 }
 
-#pragma mark - ABPeoplePickerNavigationControllerDelegate
-
-- (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
-                         didSelectPerson:(ABRecordRef)person
-                                property:(ABPropertyID)property
-                              identifier:(ABMultiValueIdentifier)identifier
-{
-    NSString *name = CFBridgingRelease(ABRecordCopyCompositeName(person));
-
-    ABMultiValueRef multi = ABRecordCopyValue(person, kABPersonPhoneProperty);
-    long index = ABMultiValueGetIndexForIdentifier(multi, identifier);
-    NSString *phone = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multi, index));
-    CFRelease(multi);
-    
-    if (self.handler)
-    {
-        self.handler(name, phone);
-    }
-    
-    [peoplePicker dismissViewControllerAnimated:YES completion:nil];
-}
-
 #pragma mark - ABNewPersonViewControllerDelegate
 
 - (void)newPersonViewController:(ABNewPersonViewController *)newPersonView didCompleteWithNewPerson:(nullable ABRecordRef)person
 {
     [newPersonView dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - CNContactPickerDelegate
-
-- (void)contactPicker:(CNContactPickerViewController *)picker didSelectContactProperty:(CNContactProperty *)contactProperty
-{
-    CNContact *contact = contactProperty.contact;
-    NSString *name = [CNContactFormatter stringFromContact:contact style:CNContactFormatterStyleFullName];
-    CNPhoneNumber *phoneValue= contactProperty.value;
-    NSString *phoneNumber = phoneValue.stringValue;
-    
-    if (self.handler)
-    {
-        self.handler(name, phoneNumber);
-    }
 }
 
 #pragma mark - CNContactViewControllerDelegate
@@ -356,18 +334,27 @@
     if (IOS9_OR_LATER)
     {
         CNContactPickerViewController *pc = [[CNContactPickerViewController alloc] init];
-        
         if (self.isAdd)
         {
             pc.delegate = self.pickerDelegate;
         }
         else
         {
-            pc.delegate = self;
+            pc.delegate = self.pickerDetailDelegate;
         }
         
         pc.displayedPropertyKeys = @[CNContactPhoneNumbersKey];
-        [controller presentViewController:pc animated:YES completion:nil];
+
+        [self _authorizationStatus:^(BOOL authorization) {
+            if (authorization)
+            {
+                [controller presentViewController:pc animated:YES completion:nil];
+            }
+            else
+            {
+                [self _showAlert];
+            }
+        }];
     }
     else
     {
@@ -380,7 +367,7 @@
         }
         else
         {
-            pvc.peoplePickerDelegate = self;
+            pvc.peoplePickerDelegate = self.pickerDetailDelegate;
         }
         
         [self _authorizationStatus:^(BOOL authorization) {
@@ -391,12 +378,17 @@
             }
             else
             {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的通讯录暂未允许访问，请去设置->隐私里面授权!" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-                [alert show];
+                [self _showAlert];
             }
             
         }];
     }
+}
+
+- (void)_showAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的通讯录暂未允许访问，请去设置->隐私里面授权!" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+    [alert show];
 }
 
 - (void)_asynAccessAddressBookWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
@@ -461,7 +453,6 @@
         [contactStore enumerateContactsWithFetchRequest:request error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
             
             LJPerson *person = [[LJPerson alloc] initWithCNContact:contact];
-            
             [datas addObject:person];
             
         }];
@@ -589,16 +580,16 @@
 void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void *context)
 {
     [[LJContactManager sharedInstance] accessContactsComplection:^(BOOL succeed, NSArray *contacts) {
-        if ([LJContactManager sharedInstance].contactsChangeHanlder)
+        if ([LJContactManager sharedInstance].contactChangeHanlder)
         {
-            [LJContactManager sharedInstance].contactsChangeHanlder(succeed, contacts);
+            [LJContactManager sharedInstance].contactChangeHanlder(succeed, contacts);
         }
     }];
     
     [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
-        if ([LJContactManager sharedInstance].sectionContactsHanlder)
+        if ([LJContactManager sharedInstance].sectionContactChangeHanlder)
         {
-            [LJContactManager sharedInstance].sectionContactsHanlder(succeed, contacts, keys);
+            [LJContactManager sharedInstance].sectionContactChangeHanlder(succeed, contacts, keys);
         }
     }];
 }
@@ -606,16 +597,16 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
 - (void)_contactStoreDidChange
 {
     [[LJContactManager sharedInstance] accessContactsComplection:^(BOOL succeed, NSArray *contacts) {
-        if ([LJContactManager sharedInstance].contactsChangeHanlder)
+        if ([LJContactManager sharedInstance].contactChangeHanlder)
         {
-            [LJContactManager sharedInstance].contactsChangeHanlder(succeed, contacts);
+            [LJContactManager sharedInstance].contactChangeHanlder(succeed, contacts);
         }
     }];
     
     [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
-         if ([LJContactManager sharedInstance].sectionContactsHanlder)
+         if ([LJContactManager sharedInstance].sectionContactChangeHanlder)
          {
-            [LJContactManager sharedInstance].sectionContactsHanlder(succeed, contacts, keys);
+            [LJContactManager sharedInstance].sectionContactChangeHanlder(succeed, contacts, keys);
          }
     }];
 }
@@ -628,8 +619,12 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
     }
     else
     {
-        ABAddressBookUnregisterExternalChangeCallback(self.addressBook, _addressBookChange, nil);
-        CFRelease(self.addressBook);
+        ABAddressBookUnregisterExternalChangeCallback(_addressBook, _addressBookChange, nil);
+        if (_addressBook)
+        {
+            CFRelease(_addressBook);
+            _addressBook = NULL;
+        }
     }
 }
 

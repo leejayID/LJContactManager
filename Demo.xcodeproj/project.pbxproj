@@ -21,6 +21,7 @@
 		B545AC271E8A088700D59DF8 /* LJContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B545AC221E8A088700D59DF8 /* LJContactManager.m */; };
 		B545AC281E8A088700D59DF8 /* LJPeoplePickerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B545AC241E8A088700D59DF8 /* LJPeoplePickerDelegate.m */; };
 		B545AC291E8A088700D59DF8 /* LJPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = B545AC261E8A088700D59DF8 /* LJPerson.m */; };
+		B5C4B0391EAD9A4F00AE5270 /* LJPickerDetailDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C4B0381EAD9A4F00AE5270 /* LJPickerDetailDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,8 @@
 		B545AC241E8A088700D59DF8 /* LJPeoplePickerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJPeoplePickerDelegate.m; sourceTree = "<group>"; };
 		B545AC251E8A088700D59DF8 /* LJPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJPerson.h; sourceTree = "<group>"; };
 		B545AC261E8A088700D59DF8 /* LJPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJPerson.m; sourceTree = "<group>"; };
+		B5C4B0371EAD9A4F00AE5270 /* LJPickerDetailDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LJPickerDetailDelegate.h; sourceTree = "<group>"; };
+		B5C4B0381EAD9A4F00AE5270 /* LJPickerDetailDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LJPickerDetailDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +124,8 @@
 				B545AC221E8A088700D59DF8 /* LJContactManager.m */,
 				B545AC231E8A088700D59DF8 /* LJPeoplePickerDelegate.h */,
 				B545AC241E8A088700D59DF8 /* LJPeoplePickerDelegate.m */,
+				B5C4B0371EAD9A4F00AE5270 /* LJPickerDetailDelegate.h */,
+				B5C4B0381EAD9A4F00AE5270 /* LJPickerDetailDelegate.m */,
 				B545AC251E8A088700D59DF8 /* LJPerson.h */,
 				B545AC261E8A088700D59DF8 /* LJPerson.m */,
 			);
@@ -153,12 +158,13 @@
 		B520F6411E89232A008024CD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = LeeJay;
 				TargetAttributes = {
 					B520F6481E89232A008024CD = {
 						CreatedOnToolsVersion = 8.1;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = Q87QUX3533;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -203,6 +209,7 @@
 				B520F6511E89232A008024CD /* AppDelegate.m in Sources */,
 				B520F6871E8925BB008024CD /* ContactTableViewCell.m in Sources */,
 				B520F6841E892534008024CD /* AddContactViewController.m in Sources */,
+				B5C4B0391EAD9A4F00AE5270 /* LJPickerDetailDelegate.m in Sources */,
 				B545AC271E8A088700D59DF8 /* LJContactManager.m in Sources */,
 				B520F6741E8923CB008024CD /* SortAddressBookViewController.m in Sources */,
 				B520F6731E8923CB008024CD /* SelectPhoneNumViewController.m in Sources */,
@@ -244,6 +251,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -292,6 +300,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -320,11 +329,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Q87QUX3533;
 				INFOPLIST_FILE = Demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Mob.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9f4041ee-73bf-4782-b7d5-f5e0538a2880";
+				PROVISIONING_PROFILE_SPECIFIER = MobProvisioningProfiles;
 			};
 			name = Debug;
 		};
@@ -332,11 +344,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = Q87QUX3533;
 				INFOPLIST_FILE = Demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Mob.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9f4041ee-73bf-4782-b7d5-f5e0538a2880";
+				PROVISIONING_PROFILE_SPECIFIER = MobProvisioningProfiles;
 			};
 			name = Release;
 		};
