@@ -185,7 +185,7 @@
             }
             else
             {
-                [self _asynAccessAddressBookWithSort :NO completcion:^(NSArray *datas, NSArray *keys) {
+                [self _asynAccessContactStoreWithSort:NO completcion:^(NSArray *datas, NSArray *keys) {
                 
                     if (completcion)
                     {
@@ -222,7 +222,7 @@
             }
             else
             {
-                [self _asynAccessAddressBookWithSort:YES completcion:^(NSArray *datas, NSArray *keys) {
+                [self _asynAccessContactStoreWithSort:YES completcion:^(NSArray *datas, NSArray *keys) {
                     
                     if (completcion)
                     {
