@@ -4,7 +4,7 @@
 
 ## 介绍
 
-LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 AddressBook 和 AddressBookUI 系统库，iOS 9 之后使用苹果新推出的 Contacts 和 ContactsUI 框架。
+LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 AddressBook 和 AddressBookUI 系统库，iOS 9 之后使用苹果新推出的 Contacts 和 ContactsUI 框架，一行代码搞定通讯录。
 
 ## 安装
 
