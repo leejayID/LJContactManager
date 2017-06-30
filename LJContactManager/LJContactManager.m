@@ -169,7 +169,7 @@
 
 - (void)accessContactsComplection:(void (^)(BOOL, NSArray<LJPerson *> *))completcion
 {
-    [self _authorizationStatus:^(BOOL authorization) {
+    [self requestAddressBookAuthorization:^(BOOL authorization) {
     
         if (authorization)
         {
@@ -185,7 +185,7 @@
             }
             else
             {
-                [self _asynAccessAddressBookWithSort :NO completcion:^(NSArray *datas, NSArray *keys) {
+                [self _asynAccessAddressBookWithSort:NO completcion:^(NSArray *datas, NSArray *keys) {
                 
                     if (completcion)
                     {
@@ -206,7 +206,7 @@
 
 - (void)accessSectionContactsComplection:(void (^)(BOOL, NSArray<LJSectionPerson *> *, NSArray<NSString *> *))completcion
 {
-    [self _authorizationStatus:^(BOOL authorization) {
+    [self requestAddressBookAuthorization:^(BOOL authorization) {
         
         if (authorization)
         {
@@ -282,7 +282,7 @@
     }
 }
 
-- (void)_authorizationStatus:(void (^) (BOOL authorization))completion
+- (void)requestAddressBookAuthorization:(void (^) (BOOL authorization))completion
 {
     __block BOOL authorization;
  
@@ -345,7 +345,7 @@
         
         pc.displayedPropertyKeys = @[CNContactPhoneNumbersKey];
 
-        [self _authorizationStatus:^(BOOL authorization) {
+        [self requestAddressBookAuthorization:^(BOOL authorization) {
             if (authorization)
             {
                 [controller presentViewController:pc animated:YES completion:nil];
@@ -370,7 +370,7 @@
             pvc.peoplePickerDelegate = self.pickerDetailDelegate;
         }
         
-        [self _authorizationStatus:^(BOOL authorization) {
+        [self requestAddressBookAuthorization:^(BOOL authorization) {
             
             if (authorization)
             {

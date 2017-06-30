@@ -42,6 +42,13 @@ typedef void (^LJSectionContactChangeHanlder) (BOOL succeed, NSArray <LJSectionP
 @property (nonatomic, copy) LJSectionContactChangeHanlder sectionContactChangeHanlder;
 
 /**
+ 请求授权
+
+ @param completion 回调
+ */
+- (void)requestAddressBookAuthorization:(void (^) (BOOL authorization))completion;
+
+/**
  选择联系人
 
  @param controller 控制器

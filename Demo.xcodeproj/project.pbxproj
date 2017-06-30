@@ -333,7 +333,7 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Mob.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = Mob.ContactDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "9f4041ee-73bf-4782-b7d5-f5e0538a2880";
 				PROVISIONING_PROFILE_SPECIFIER = MobProvisioningProfiles;
@@ -348,7 +348,7 @@
 				INFOPLIST_FILE = Demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Mob.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = Mob.ContactDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "9f4041ee-73bf-4782-b7d5-f5e0538a2880";
 				PROVISIONING_PROFILE_SPECIFIER = MobProvisioningProfiles;

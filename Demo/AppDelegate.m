@@ -19,6 +19,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    [[LJContactManager sharedInstance] requestAddressBookAuthorization:^(BOOL authorization) {
+    
+        NSLog(@"%d", authorization);
+        
+    }];
+    
     [LJContactManager sharedInstance].contactChangeHanlder = ^(BOOL succeed, NSArray<LJPerson *> *newContacts) {
     
         NSLog(@"通讯录修改咯");

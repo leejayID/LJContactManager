@@ -186,6 +186,8 @@
         NSString *phoneticMiddleName = CFBridgingRelease(ABRecordCopyValue(record, kABPersonMiddleNamePhoneticProperty));
         NSData *imageData = CFBridgingRelease(ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatOriginalSize));
         NSData *thumbnailImageData = CFBridgingRelease(ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatThumbnail));
+        NSDate *creationDate = CFBridgingRelease(ABRecordCopyValue(record, kABPersonCreationDateProperty));
+        NSDate *modificationDate = CFBridgingRelease(ABRecordCopyValue(record, kABPersonModificationDateProperty));
         
         self.fullName = fullName;
         self.familyName = firstName;
@@ -205,7 +207,9 @@
         self.image = [UIImage imageWithData:imageData];
         self.thumbnailImageData = thumbnailImageData;
         self.thumbnailImage = [UIImage imageWithData:thumbnailImageData];
-
+        self.creationDate = creationDate;
+        self.modificationDate = modificationDate;
+        
         // 号码
         ABMultiValueRef multiPhones = ABRecordCopyValue(record, kABPersonPhoneProperty);
         CFIndex phoneCount = ABMultiValueGetCount(multiPhones);
@@ -281,7 +285,6 @@
         }
         CFRelease(multiRelations);
         self.relations = relations;
-        
         
         // URL
         ABMultiValueRef multiURLs = ABRecordCopyValue(record, kABPersonURLProperty);

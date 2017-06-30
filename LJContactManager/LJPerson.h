@@ -116,6 +116,16 @@ typedef NS_ENUM(NSUInteger, LJContactType)
 @property (nonatomic, strong) UIImage *thumbnailImage;
 
 /**
+ 获取创建当前联系人的时间
+ */
+@property (nonatomic, strong) NSDate *creationDate;
+
+/**
+ 获取最近一次修改当前联系人的时间
+ */
+@property (nonatomic, strong) NSDate *modificationDate;
+
+/**
  电话号码数组
  */
 @property (nonatomic, copy) NSArray <LJPhone *> *phones;
