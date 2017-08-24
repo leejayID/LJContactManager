@@ -560,7 +560,7 @@
     }
     if ([str compare:@"地"] == NSOrderedSame)
     {
-        [pinyinString replaceCharactersInRange:NSMakeRange(0, 3) withString:@"di"];
+        [pinyinString replaceCharactersInRange:NSMakeRange(0, 2) withString:@"di"];
     }
     if ([str compare:@"重"] == NSOrderedSame)
     {
