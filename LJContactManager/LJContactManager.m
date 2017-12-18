@@ -546,23 +546,24 @@
     NSString *str = [string substringToIndex:1];
     
     // 多音字处理http://blog.csdn.net/qq_29307685/article/details/51532147
-    if ([str compare:@"长"] == NSOrderedSame)
+    if ([str isEqualToString:@"长"])
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chang"];
     }
-    if ([str compare:@"沈"] == NSOrderedSame)
+    
+    if ([str isEqualToString:@"沈"])
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 4) withString:@"shen"];
     }
-    if ([str compare:@"厦"] == NSOrderedSame)
+    if ([str isEqualToString:@"厦"])
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 3) withString:@"xia"];
     }
-    if ([str compare:@"地"] == NSOrderedSame)
+    if ([str isEqualToString:@"地"])
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 2) withString:@"di"];
     }
-    if ([str compare:@"重"] == NSOrderedSame)
+    if ([str isEqualToString:@"重"])
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chong"];
     }
