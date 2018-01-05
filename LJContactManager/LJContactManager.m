@@ -282,50 +282,41 @@
     }
 }
 
-- (void)requestAddressBookAuthorization:(void (^) (BOOL authorization))completion
-{
-    __block BOOL authorization;
- 
+- (void)requestAddressBookAuthorization:(void (^)(BOOL authorization))completion {
+
     if (IOS9_OR_LATER)
     {
         CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
-        
+
         if (status == CNAuthorizationStatusNotDetermined)
         {
             [self _authorizationAddressBook:^(BOOL succeed) {
-                authorization = succeed;
+                _blockExecute(completion, succeed);
             }];
+        } else {
+            _blockExecute(completion, status == CNAuthorizationStatusAuthorized);
         }
-        else if (status == CNAuthorizationStatusAuthorized)
-        {
-            authorization = YES;
-        }
-        else
-        {
-            authorization = NO;
-        }
-    }
-    else
-    {
+    } else {
         if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
         {
             [self _authorizationAddressBook:^(BOOL succeed) {
-                authorization = succeed;
+                _blockExecute(completion, succeed);
             }];
-        }
-        else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized)
-        {
-            authorization = YES;
-        }
-        else
-        {
-            authorization = NO;
+        } else {
+            _blockExecute(completion, ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
         }
     }
-   
-    if (completion)
-    {
-        completion(authorization);
+}
+
+void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB) {
+    if (completion) {
+        if ([NSThread isMainThread]) {
+            completion(authorizationB);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(authorizationB);
+            });
+        }
     }
 }
 
