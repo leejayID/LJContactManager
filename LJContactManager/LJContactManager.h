@@ -16,7 +16,7 @@
  @param succeed 是否成功
  @param newContacts  联系人列表（未分组）
  */
-typedef void (^LJContactChangeHanlder) (BOOL succeed, NSArray <LJPerson *> *newContacts);
+typedef void (^LJContactChangeHandler) (BOOL succeed, NSArray <LJPerson *> *newContacts);
 
 /**
  通讯录变更回调（已分组的通讯录）
@@ -25,7 +25,7 @@ typedef void (^LJContactChangeHanlder) (BOOL succeed, NSArray <LJPerson *> *newC
  @param newSectionContacts 联系人列表（已分组）
  @param keys 所有联系人的分区标题
  */
-typedef void (^LJSectionContactChangeHanlder) (BOOL succeed, NSArray <LJSectionPerson *> *newSectionContacts, NSArray <NSString *> *keys);
+typedef void (^LJSectionContactChangeHandler) (BOOL succeed, NSArray <LJSectionPerson *> *newSectionContacts, NSArray <NSString *> *keys);
 
 @interface LJContactManager : NSObject
 
@@ -34,12 +34,12 @@ typedef void (^LJSectionContactChangeHanlder) (BOOL succeed, NSArray <LJSectionP
 /**
  通讯录变更回调（未分组的通讯录）
  */
-@property (nonatomic, copy) LJContactChangeHanlder contactChangeHanlder;
+@property (nonatomic, copy) LJContactChangeHandler contactChangeHandler;
 
 /**
  通讯录变更回调（已分组的通讯录）
  */
-@property (nonatomic, copy) LJSectionContactChangeHanlder sectionContactChangeHanlder;
+@property (nonatomic, copy) LJSectionContactChangeHandler sectionContactChangeHandler;
 
 /**
  请求授权

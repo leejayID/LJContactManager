@@ -456,11 +456,11 @@
         self.brithdayDate = CFBridgingRelease(ABRecordCopyValue(record, kABPersonBirthdayProperty));
         
         NSDictionary *dict = CFBridgingRelease((ABRecordCopyValue(record, kABPersonAlternateBirthdayProperty)));
-        self.calendarIdentifier = [dict valueForKey:@"calendarIdentifier"];
-        self.era = [(NSNumber *)[dict valueForKey:@"era"] integerValue];
-        self.year = [(NSNumber *)[dict valueForKey:@"year"] integerValue];
-        self.month = [(NSNumber *)[dict valueForKey:@"month"] integerValue];
-        self.day = [(NSNumber *)[dict valueForKey:@"day"] integerValue];
+        self.calendarIdentifier = dict[@"calendarIdentifier"];
+        self.era = [(NSNumber *)dict[@"era"] integerValue];
+        self.year = [(NSNumber *)dict[@"year"] integerValue];
+        self.month = [(NSNumber *)dict[@"month"] integerValue];
+        self.day = [(NSNumber *)dict[@"day"] integerValue];
     }
     return self;
 }
@@ -487,8 +487,8 @@
     if (self)
     {
         NSDictionary *dict = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
-        self.service = [dict valueForKey:@"service"];
-        self.userName = [dict valueForKey:@"username"];
+        self.service = dict[@"service"];
+        self.userName = dict[@"username"];
     }
     return self;
 }
@@ -516,9 +516,9 @@
     if (self)
     {
         NSDictionary *dict = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
-        self.service = [dict valueForKey:@"service"];
-        self.username = [dict valueForKey:@"username"];
-        self.urlString = [dict valueForKey:@"url"];
+        self.service = dict[@"service"];
+        self.username = dict[@"username"];
+        self.urlString = dict[@"url"];
     }
     return self;
 }

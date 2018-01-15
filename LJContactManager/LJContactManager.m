@@ -25,6 +25,7 @@
 @property (nonatomic, strong) LJPeoplePickerDelegate *pickerDelegate;
 @property (nonatomic, strong) LJPickerDetailDelegate *pickerDetailDelegate;
 @property (nonatomic) ABAddressBookRef addressBook;
+@property (nonatomic, strong) CNContactStore *contactStore;
 
 @end
 
@@ -37,6 +38,7 @@
     {
         if (IOS9_OR_LATER)
         {
+            _contactStore = [CNContactStore new];
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(_contactStoreDidChange)
                                                          name:CNContactStoreDidChangeNotification
@@ -119,13 +121,7 @@
     self.isAdd = NO;
     [self _presentFromController:controller];
     
-    self.handler = ^(NSString *name, NSString *phone){
-        
-        if (completcion)
-        {
-            completcion(name, phone);
-        }
-    };
+    self.handler = completcion;
 }
 
 - (void)createNewContactWithPhoneNum:(NSString *)phoneNum controller:(UIViewController *)controller
@@ -255,14 +251,45 @@
     [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)requestAddressBookAuthorization:(void (^)(BOOL authorization))completion
+{
+    if (IOS9_OR_LATER)
+    {
+        CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
+        
+        if (status == CNAuthorizationStatusNotDetermined)
+        {
+            [self _authorizationAddressBook:^(BOOL succeed) {
+                _blockExecute(completion, succeed);
+            }];
+        }
+        else
+        {
+            _blockExecute(completion, status == CNAuthorizationStatusAuthorized);
+        }
+    }
+    else
+    {
+        if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
+        {
+            [self _authorizationAddressBook:^(BOOL succeed) {
+                _blockExecute(completion, succeed);
+            }];
+        }
+        else
+        {
+            _blockExecute(completion, ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
+        }
+    }
+}
+
 #pragma mark - Private
 
 - (void)_authorizationAddressBook:(void (^) (BOOL succeed))completion
 {
     if (IOS9_OR_LATER)
     {
-        CNContactStore *store = [CNContactStore new];
-        [store requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        [_contactStore requestAccessForEntityType:CNEntityTypeContacts completionHandler:^(BOOL granted, NSError * _Nullable error) {
             if (completion)
             {
                 completion(granted);
@@ -271,9 +298,7 @@
     }
     else
     {
-        ABAddressBookRef addressBook = ABAddressBookCreate();
-        ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-            CFRelease(addressBook);
+        ABAddressBookRequestAccessWithCompletion(_addressBook, ^(bool granted, CFErrorRef error) {
             if (completion)
             {
                 completion(granted);
@@ -282,37 +307,16 @@
     }
 }
 
-- (void)requestAddressBookAuthorization:(void (^)(BOOL authorization))completion {
-
-    if (IOS9_OR_LATER)
+void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
+{
+    if (completion)
     {
-        CNAuthorizationStatus status = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
-
-        if (status == CNAuthorizationStatusNotDetermined)
+        if ([NSThread isMainThread])
         {
-            [self _authorizationAddressBook:^(BOOL succeed) {
-                _blockExecute(completion, succeed);
-            }];
-        } else {
-            _blockExecute(completion, status == CNAuthorizationStatusAuthorized);
-        }
-    } else {
-        if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined)
-        {
-            [self _authorizationAddressBook:^(BOOL succeed) {
-                _blockExecute(completion, succeed);
-            }];
-        } else {
-            _blockExecute(completion, ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized);
-        }
-    }
-}
-
-void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB) {
-    if (completion) {
-        if ([NSThread isMainThread]) {
             completion(authorizationB);
-        } else {
+        }
+        else
+        {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(authorizationB);
             });
@@ -388,8 +392,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
-        ABAddressBookRef addressBook = ABAddressBookCreate();
-        CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+        CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(_addressBook);
         CFIndex count = CFArrayGetCount(allPeople);
         
         for (int i = 0; i < count; i++)
@@ -399,7 +402,6 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
             [datas addObject:personModel];
         }
         
-        CFRelease(addressBook);
         CFRelease(allPeople);
         
         if (!isSort)
@@ -437,11 +439,8 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
         NSMutableArray *datas = [NSMutableArray array];
-        CNContactStore *contactStore = [CNContactStore new];
-    
         CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:self.keys];
-        
-        [contactStore enumerateContactsWithFetchRequest:request error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
+        [_contactStore enumerateContactsWithFetchRequest:request error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
             
             LJPerson *person = [[LJPerson alloc] initWithCNContact:contact];
             [datas addObject:person];
@@ -541,7 +540,6 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chang"];
     }
-    
     if ([str isEqualToString:@"沈"])
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 4) withString:@"shen"];
@@ -571,36 +569,16 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 
 void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void *context)
 {
-    [[LJContactManager sharedInstance] accessContactsComplection:^(BOOL succeed, NSArray *contacts) {
-        if ([LJContactManager sharedInstance].contactChangeHanlder)
-        {
-            [LJContactManager sharedInstance].contactChangeHanlder(succeed, contacts);
-        }
-    }];
+    [[LJContactManager sharedInstance] accessContactsComplection:[LJContactManager sharedInstance].contactChangeHandler];
     
-    [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
-        if ([LJContactManager sharedInstance].sectionContactChangeHanlder)
-        {
-            [LJContactManager sharedInstance].sectionContactChangeHanlder(succeed, contacts, keys);
-        }
-    }];
+    [[LJContactManager sharedInstance] accessSectionContactsComplection:[LJContactManager sharedInstance].sectionContactChangeHandler];
 }
 
 - (void)_contactStoreDidChange
 {
-    [[LJContactManager sharedInstance] accessContactsComplection:^(BOOL succeed, NSArray *contacts) {
-        if ([LJContactManager sharedInstance].contactChangeHanlder)
-        {
-            [LJContactManager sharedInstance].contactChangeHanlder(succeed, contacts);
-        }
-    }];
+    [[LJContactManager sharedInstance] accessContactsComplection:[LJContactManager sharedInstance].contactChangeHandler];
     
-    [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
-         if ([LJContactManager sharedInstance].sectionContactChangeHanlder)
-         {
-            [LJContactManager sharedInstance].sectionContactChangeHanlder(succeed, contacts, keys);
-         }
-    }];
+    [[LJContactManager sharedInstance] accessSectionContactsComplection:[LJContactManager sharedInstance].sectionContactChangeHandler];
 }
 
 - (void)dealloc
