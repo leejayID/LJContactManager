@@ -19,13 +19,19 @@
     
     // Override point for customization after application launch.
     
-    [LJContactManager sharedInstance].contactChangeHandler = ^(BOOL succeed, NSArray<LJPerson *> *newContacts) {
+    [LJContactManager sharedInstance].contactChangeHandler = ^{
     
         NSLog(@"通讯录修改咯");
         
-        NSLog(@"%@", newContacts);
+        [[LJContactManager sharedInstance] accessContactsComplection:^(BOOL succeed, NSArray<LJPerson *> *contacts) {
+            NSLog(@"%@", contacts);
+        }];
+        
+        [[LJContactManager sharedInstance] accessSectionContactsComplection:^(BOOL succeed, NSArray<LJSectionPerson *> *contacts, NSArray<NSString *> *keys) {
+            NSLog(@"%@--%@", contacts, keys);
+        }];
     };
-
+    
     return YES;
 }
 

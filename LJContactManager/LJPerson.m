@@ -173,6 +173,8 @@
         NSString *fullName = CFBridgingRelease(ABRecordCopyCompositeName(record));
         NSString *firstName = CFBridgingRelease(ABRecordCopyValue(record, kABPersonFirstNameProperty));
         NSString *lastName = CFBridgingRelease(ABRecordCopyValue(record, kABPersonLastNameProperty));
+        
+      
         NSString *namePrefix = CFBridgingRelease(ABRecordCopyValue(record, kABPersonPrefixProperty));
         NSString *nameSuffix = CFBridgingRelease(ABRecordCopyValue(record, kABPersonSuffixProperty));
         NSString *nickname = CFBridgingRelease(ABRecordCopyValue(record, kABPersonNicknameProperty));
@@ -184,8 +186,11 @@
         NSString *phoneticFamilyName = CFBridgingRelease(ABRecordCopyValue(record, kABPersonFirstNamePhoneticProperty));
         NSString *phoneticGivenName = CFBridgingRelease(ABRecordCopyValue(record, kABPersonLastNamePhoneticProperty));
         NSString *phoneticMiddleName = CFBridgingRelease(ABRecordCopyValue(record, kABPersonMiddleNamePhoneticProperty));
+       
         NSData *imageData = CFBridgingRelease(ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatOriginalSize));
+        
         NSData *thumbnailImageData = CFBridgingRelease(ABPersonCopyImageDataWithFormat(record, kABPersonImageFormatThumbnail));
+       
         NSDate *creationDate = CFBridgingRelease(ABRecordCopyValue(record, kABPersonCreationDateProperty));
         NSDate *modificationDate = CFBridgingRelease(ABRecordCopyValue(record, kABPersonModificationDateProperty));
         
@@ -209,7 +214,7 @@
         self.thumbnailImage = [UIImage imageWithData:thumbnailImageData];
         self.creationDate = creationDate;
         self.modificationDate = modificationDate;
-        
+
         // 号码
         ABMultiValueRef multiPhones = ABRecordCopyValue(record, kABPersonPhoneProperty);
         CFIndex phoneCount = ABMultiValueGetCount(multiPhones);

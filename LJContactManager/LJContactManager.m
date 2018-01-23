@@ -26,6 +26,7 @@
 @property (nonatomic, strong) LJPickerDetailDelegate *pickerDetailDelegate;
 @property (nonatomic) ABAddressBookRef addressBook;
 @property (nonatomic, strong) CNContactStore *contactStore;
+@property (nonatomic) dispatch_queue_t queue;
 
 @end
 
@@ -36,6 +37,8 @@
     self = [super init];
     if (self)
     {
+        _queue = dispatch_queue_create("com.addressBook.queue", DISPATCH_QUEUE_SERIAL);
+
         if (IOS9_OR_LATER)
         {
             _contactStore = [CNContactStore new];
@@ -389,8 +392,8 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 - (void)_asynAccessAddressBookWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
 {
     NSMutableArray *datas = [NSMutableArray array];
-    
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        
+    dispatch_async(_queue, ^{
         
         CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(_addressBook);
         CFIndex count = CFArrayGetCount(allPeople);
@@ -436,7 +439,9 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 
 - (void)_asynAccessContactStoreWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
 {
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    dispatch_queue_t queue = dispatch_queue_create("addressBook.contact", DISPATCH_QUEUE_SERIAL);
+
+    dispatch_async(queue, ^{
         
         NSMutableArray *datas = [NSMutableArray array];
         CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:self.keys];
@@ -569,16 +574,18 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 
 void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void *context)
 {
-    [[LJContactManager sharedInstance] accessContactsComplection:[LJContactManager sharedInstance].contactChangeHandler];
-    
-    [[LJContactManager sharedInstance] accessSectionContactsComplection:[LJContactManager sharedInstance].sectionContactChangeHandler];
+    if ([LJContactManager sharedInstance].contactChangeHandler)
+    {
+        [LJContactManager sharedInstance].contactChangeHandler();
+    }
 }
 
 - (void)_contactStoreDidChange
 {
-    [[LJContactManager sharedInstance] accessContactsComplection:[LJContactManager sharedInstance].contactChangeHandler];
-    
-    [[LJContactManager sharedInstance] accessSectionContactsComplection:[LJContactManager sharedInstance].sectionContactChangeHandler];
+    if ([LJContactManager sharedInstance].contactChangeHandler)
+    {
+        [LJContactManager sharedInstance].contactChangeHandler();
+    }
 }
 
 - (void)dealloc
