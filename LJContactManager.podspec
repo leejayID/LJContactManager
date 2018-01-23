@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
     s.name         = 'LJContactManager'
-    s.version      = '1.0.1'
+    s.version      = '1.0.2'
     s.summary      = '获取通讯录所有信息'
     s.description  = '一行代码获取已排序和未排序的通讯录，一行代码添加号码至通讯录，操作通讯录的 UI'
     s.homepage     = 'https://github.com/leejayID/LJContactManager.git'

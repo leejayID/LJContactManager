@@ -439,9 +439,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 
 - (void)_asynAccessContactStoreWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
 {
-    dispatch_queue_t queue = dispatch_queue_create("addressBook.contact", DISPATCH_QUEUE_SERIAL);
-
-    dispatch_async(queue, ^{
+    dispatch_async(_queue, ^{
         
         NSMutableArray *datas = [NSMutableArray array];
         CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:self.keys];
