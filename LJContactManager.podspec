@@ -11,4 +11,5 @@ Pod::Spec.new do |s|
     s.source       = {:git => 'https://github.com/leejayID/LJContactManager.git', :tag => s.version}
     s.source_files = 'LJContactManager', 'LJContactManager/**/*.{h,m}'
     s.requires_arc = true
+    s.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"' }
 end
