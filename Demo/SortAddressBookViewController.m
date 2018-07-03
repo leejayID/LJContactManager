@@ -94,12 +94,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SectionCell"];
-    
     LJSectionPerson *sectionModel = self.dataSource[indexPath.section];
     LJPerson *personModel = sectionModel.persons[indexPath.row];
-    
     cell.model = personModel;
-    
     return cell;
 }
 

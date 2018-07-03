@@ -24,7 +24,6 @@
         self.nameTextField.text = name;
         self.phoneNumTextField.text = phone;
     }];
-
 }
 
 @end

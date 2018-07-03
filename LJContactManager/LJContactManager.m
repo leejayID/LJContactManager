@@ -110,7 +110,8 @@
         _pickerDetailDelegate = [LJPickerDetailDelegate new];
         __weak typeof(self) weakSelf = self;
         _pickerDetailDelegate.handler = ^(NSString *name, NSString *phoneNum) {
-            weakSelf.handler(name, phoneNum);
+            NSString *newPhoneNum = [weakSelf _filterSpecialString:phoneNum];
+            weakSelf.handler(name, newPhoneNum);
         };
     }
     return _pickerDetailDelegate;
@@ -584,6 +585,22 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
     {
         [LJContactManager sharedInstance].contactChangeHandler();
     }
+}
+
+- (NSString *)_filterSpecialString:(NSString *)string
+{
+    if (string == nil)
+    {
+        return @"";
+    }
+    
+    string = [string stringByReplacingOccurrencesOfString:@"+86" withString:@""];
+    string = [string stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    string = [string stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    string = [string stringByReplacingOccurrencesOfString:@")" withString:@""];
+    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+    return string;
 }
 
 - (void)dealloc

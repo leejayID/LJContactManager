@@ -80,14 +80,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableViewCell"];
-    
     LJPerson *personModel = self.dataSource[indexPath.row];
-    
     cell.textLabel.text = personModel.fullName;
-    
     LJPhone *phoneModel = personModel.phones.firstObject;
     cell.detailTextLabel.text = phoneModel.phone;
-
     return cell;
 }
 
