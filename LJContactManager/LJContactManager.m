@@ -14,10 +14,11 @@
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
 #import "LJPickerDetailDelegate.h"
+#import "NSString+LJExtension.h"
 
-#define IOS9_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
+#define IOS9_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] == 9.0)
 
-@interface LJContactManager () <ABNewPersonViewControllerDelegate, CNContactViewControllerDelegate>
+@interface LJContactManager () <ABNewPersonViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, CNContactViewControllerDelegate, CNContactPickerDelegate>
 
 @property (nonatomic, copy) void (^handler) (NSString *, NSString *);
 @property (nonatomic, assign) BOOL isAdd;
@@ -110,7 +111,7 @@
         _pickerDetailDelegate = [LJPickerDetailDelegate new];
         __weak typeof(self) weakSelf = self;
         _pickerDetailDelegate.handler = ^(NSString *name, NSString *phoneNum) {
-            NSString *newPhoneNum = [weakSelf _filterSpecialString:phoneNum];
+            NSString *newPhoneNum = [NSString lj_filterSpecialString:phoneNum];
             weakSelf.handler(name, newPhoneNum);
         };
     }
@@ -393,10 +394,11 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 - (void)_asynAccessAddressBookWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
 {
     NSMutableArray *datas = [NSMutableArray array];
-        
+    
+    __weak typeof(self) weakSelf = self;
     dispatch_async(_queue, ^{
         
-        CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(_addressBook);
+        CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(weakSelf.addressBook);
         CFIndex count = CFArrayGetCount(allPeople);
         
         for (int i = 0; i < count; i++)
@@ -440,11 +442,12 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
 
 - (void)_asynAccessContactStoreWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
 {
+    __weak typeof(self) weakSelf = self;
     dispatch_async(_queue, ^{
         
         NSMutableArray *datas = [NSMutableArray array];
         CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:self.keys];
-        [_contactStore enumerateContactsWithFetchRequest:request error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
+        [weakSelf.contactStore enumerateContactsWithFetchRequest:request error:nil usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
             
             LJPerson *person = [[LJPerson alloc] initWithCNContact:contact];
             [datas addObject:person];
@@ -487,7 +490,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
     
     for (LJPerson *person in datas)
     {
-        NSString *firstLetter = [self _firstCharacterWithString:person.fullName];
+        NSString *firstLetter = [NSString lj_firstCharacterWithString:person.fullName];
         
         if (dict[firstLetter])
         {
@@ -525,52 +528,6 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
     }
 }
 
-- (NSString *)_firstCharacterWithString:(NSString *)string
-{
-    if (string.length == 0)
-    {
-        return @"#";
-    }
-    
-    NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    
-    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
-    
-    NSMutableString *pinyinString = [[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]] mutableCopy];
-    NSString *str = [string substringToIndex:1];
-    
-    // 多音字处理http://blog.csdn.net/qq_29307685/article/details/51532147
-    if ([str isEqualToString:@"长"])
-    {
-        [pinyinString replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chang"];
-    }
-    if ([str isEqualToString:@"沈"])
-    {
-        [pinyinString replaceCharactersInRange:NSMakeRange(0, 4) withString:@"shen"];
-    }
-    if ([str isEqualToString:@"厦"])
-    {
-        [pinyinString replaceCharactersInRange:NSMakeRange(0, 3) withString:@"xia"];
-    }
-    if ([str isEqualToString:@"地"])
-    {
-        [pinyinString replaceCharactersInRange:NSMakeRange(0, 2) withString:@"di"];
-    }
-    if ([str isEqualToString:@"重"])
-    {
-        [pinyinString replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chong"];
-    }
-    
-    NSString *upperStr = [[pinyinString substringToIndex:1] uppercaseString];
-    
-    NSString *regex = @"^[A-Z]$";
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
-    
-    NSString *firstCharacter = [predicate evaluateWithObject:upperStr] ? upperStr : @"#";
-    
-    return firstCharacter;
-}
-
 void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void *context)
 {
     if ([LJContactManager sharedInstance].contactChangeHandler)
@@ -585,22 +542,6 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
     {
         [LJContactManager sharedInstance].contactChangeHandler();
     }
-}
-
-- (NSString *)_filterSpecialString:(NSString *)string
-{
-    if (string == nil)
-    {
-        return @"";
-    }
-    
-    string = [string stringByReplacingOccurrencesOfString:@"+86" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@"-" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@"(" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@")" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-    return string;
 }
 
 - (void)dealloc

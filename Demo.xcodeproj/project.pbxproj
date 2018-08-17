@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		449DDED620EDD08200669B84 /* NSString+LJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 449DDED520EDD08200669B84 /* NSString+LJExtension.m */; };
 		B520F64E1E89232A008024CD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B520F64D1E89232A008024CD /* main.m */; };
 		B520F6511E89232A008024CD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B520F6501E89232A008024CD /* AppDelegate.m */; };
 		B520F6541E89232A008024CD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B520F6531E89232A008024CD /* ViewController.m */; };
@@ -25,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		449DDED420EDD08200669B84 /* NSString+LJExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+LJExtension.h"; sourceTree = "<group>"; };
+		449DDED520EDD08200669B84 /* NSString+LJExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+LJExtension.m"; sourceTree = "<group>"; };
 		B520F6491E89232A008024CD /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B520F64D1E89232A008024CD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B520F64F1E89232A008024CD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -128,6 +131,8 @@
 				B5C4B0381EAD9A4F00AE5270 /* LJPickerDetailDelegate.m */,
 				B545AC251E8A088700D59DF8 /* LJPerson.h */,
 				B545AC261E8A088700D59DF8 /* LJPerson.m */,
+				449DDED420EDD08200669B84 /* NSString+LJExtension.h */,
+				449DDED520EDD08200669B84 /* NSString+LJExtension.m */,
 			);
 			path = LJContactManager;
 			sourceTree = "<group>";
@@ -158,7 +163,7 @@
 		B520F6411E89232A008024CD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = LeeJay;
 				TargetAttributes = {
 					B520F6481E89232A008024CD = {
@@ -207,6 +212,7 @@
 				B545AC291E8A088700D59DF8 /* LJPerson.m in Sources */,
 				B520F6541E89232A008024CD /* ViewController.m in Sources */,
 				B520F6511E89232A008024CD /* AppDelegate.m in Sources */,
+				449DDED620EDD08200669B84 /* NSString+LJExtension.m in Sources */,
 				B520F6871E8925BB008024CD /* ContactTableViewCell.m in Sources */,
 				B520F6841E892534008024CD /* AddContactViewController.m in Sources */,
 				B5C4B0391EAD9A4F00AE5270 /* LJPickerDetailDelegate.m in Sources */,
@@ -246,6 +252,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -253,6 +260,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -301,6 +309,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -308,6 +317,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -347,7 +357,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Mob.ContactDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9f4041ee-73bf-4782-b7d5-f5e0538a2880";
+				PROVISIONING_PROFILE = "4801bcce-dd48-4478-bbca-923a875055e8";
 				PROVISIONING_PROFILE_SPECIFIER = MobProvisioningProfiles;
 			};
 			name = Debug;

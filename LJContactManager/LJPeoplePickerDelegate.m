@@ -32,16 +32,39 @@
 
 - (void)newPersonViewController:(ABNewPersonViewController *)newPersonView didCompleteWithNewPerson:(nullable ABRecordRef)person
 {
+    if (self.completcion)
+    {
+        self.completcion(YES);
+    }
     [newPersonView dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
+{
+    if (self.completcion)
+    {
+        self.completcion(NO);
+    }
 }
 
 #pragma mark - CNContactViewControllerDelegate
 
 - (void)contactViewController:(CNContactViewController *)viewController didCompleteWithContact:(CNContact *)contact
 {
+    if (self.completcion)
+    {
+        self.completcion(YES);
+    }
     [viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)contactPickerDidCancel:(CNContactPickerViewController *)picker
+{
+    if (self.completcion)
+    {
+        self.completcion(NO);
+    }
+}
 
 #pragma mark - Private
 

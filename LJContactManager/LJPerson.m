@@ -7,6 +7,7 @@
 //
 
 #import "LJPerson.h"
+#import "NSString+LJExtension.h"
 
 @implementation LJPerson
 
@@ -317,26 +318,10 @@
     {
         CNPhoneNumber *phoneValue = labeledValue.value;
         NSString *phoneNumber = phoneValue.stringValue;
-        self.phone = [self _filterSpecialString:phoneNumber];
+        self.phone = [NSString lj_filterSpecialString:phoneNumber];
         self.label = [CNLabeledValue localizedStringForLabel:labeledValue.label];
     }
     return self;
-}
-
-- (NSString *)_filterSpecialString:(NSString *)string
-{
-    if (string == nil)
-    {
-        return @"";
-    }
-    
-    string = [string stringByReplacingOccurrencesOfString:@"+86" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@"-" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@"(" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@")" withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-    return string;
 }
 
 - (instancetype)initWithMultiValue:(ABMultiValueRef)multiValue index:(CFIndex)index
@@ -344,13 +329,30 @@
     self = [super init];
     if (self)
     {
-        CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, index);
-        self.label = CFBridgingRelease(ABAddressBookCopyLocalizedLabel(label));
+        NSString *label = (NSString *)CFBridgingRelease(ABMultiValueCopyLabelAtIndex(multiValue, index));
+        CFStringRef localizedRef = ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
+        NSString *localized = nil;
+        if (localizedRef)
+        {
+            localized = [NSString stringWithString:(__bridge NSString *)localizedRef];
+            CFRelease(localizedRef);
+        }
+        self.label = localized;
         NSString *phoneNumber = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
-        self.phone = [self _filterSpecialString:phoneNumber];
-        CFRelease(label);
+        self.phone = [NSString lj_filterSpecialString:phoneNumber];
     }
     return self;
+}
+
++ (NSString *)localizedLabel:(NSString*)label
+{
+    CFStringRef localizedRef = ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
+    NSString *localized = nil;
+    if (localizedRef){
+        localized = [NSString stringWithString:(__bridge NSString*)localizedRef];
+        CFRelease(localizedRef);
+    }
+    return localized;
 }
 
 @end
@@ -373,10 +375,15 @@
     self = [super init];
     if (self)
     {
-        CFStringRef label = ABMultiValueCopyLabelAtIndex(multiValue, index);
-        CFStringRef localLabel = ABAddressBookCopyLocalizedLabel(label);
-        CFRelease(label);
-        self.label = CFBridgingRelease(localLabel);
+        NSString *label = (NSString *)CFBridgingRelease(ABMultiValueCopyLabelAtIndex(multiValue, index));
+        CFStringRef localizedRef = ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
+        NSString *localized = nil;
+        if (localizedRef)
+        {
+            localized = [NSString stringWithString:(__bridge NSString *)localizedRef];
+            CFRelease(localizedRef);
+        }
+        self.label = localized;
         NSString *emial = CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, index));
         self.email = emial;
     }

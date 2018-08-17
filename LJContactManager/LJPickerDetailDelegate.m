@@ -37,13 +37,23 @@
 - (void)contactPicker:(CNContactPickerViewController *)picker didSelectContactProperty:(CNContactProperty *)contactProperty
 {
     CNContact *contact = contactProperty.contact;
+    
     NSString *name = [CNContactFormatter stringFromContact:contact style:CNContactFormatterStyleFullName];
     CNPhoneNumber *phoneValue= contactProperty.value;
-    NSString *phoneNumber = phoneValue.stringValue;
-    
-    if (self.handler)
+    if ([phoneValue isKindOfClass:[CNPhoneNumber class]])
     {
-        self.handler(name, phoneNumber);
+        if (self.handler)
+        {
+            self.handler(name, phoneValue.stringValue);
+        }
+    }
+    else
+    {
+        // 邮箱
+        if (self.handler)
+        {
+            self.handler(name, (NSString *)phoneValue);
+        }
     }
 }
 

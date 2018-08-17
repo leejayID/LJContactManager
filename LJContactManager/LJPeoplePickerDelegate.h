@@ -14,5 +14,6 @@
 
 @property (nonatomic, copy) NSString *phoneNum;
 @property (nonatomic, weak) UIViewController *controller;
+@property (nonatomic, copy) void (^completcion) (BOOL succeed);
 
 @end
