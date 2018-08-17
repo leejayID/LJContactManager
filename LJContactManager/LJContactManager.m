@@ -16,7 +16,7 @@
 #import "LJPickerDetailDelegate.h"
 #import "NSString+LJExtension.h"
 
-#define IOS9_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] == 9.0)
+#define IOS9_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)
 
 @interface LJContactManager () <ABNewPersonViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, CNContactViewControllerDelegate, CNContactPickerDelegate>
 
