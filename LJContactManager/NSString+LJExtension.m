@@ -26,18 +26,17 @@
     return string;
 }
 
-+ (NSString *)lj_firstCharacterWithString:(NSString *)string
++ (NSString *)lj_pinyinForString:(NSString *)string
 {
     if (string.length == 0)
     {
-        return @"#";
+        return nil;
     }
     
     NSMutableString *mutableString = [NSMutableString stringWithString:string];
-    
     CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
-    
     NSMutableString *pinyinString = [[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]] mutableCopy];
+  
     NSString *str = [string substringToIndex:1];
     
     // 多音字处理http://blog.csdn.net/qq_29307685/article/details/51532147
@@ -61,15 +60,8 @@
     {
         [pinyinString replaceCharactersInRange:NSMakeRange(0, 5) withString:@"chong"];
     }
-    
-    NSString *upperStr = [[pinyinString substringToIndex:1] uppercaseString];
-    
-    NSString *regex = @"^[A-Z]$";
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
-    
-    NSString *firstCharacter = [predicate evaluateWithObject:upperStr] ? upperStr : @"#";
-    
-    return firstCharacter;
+   
+    return [[pinyinString lowercaseString] copy];
 }
 
 @end

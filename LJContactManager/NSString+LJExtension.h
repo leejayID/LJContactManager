@@ -19,11 +19,11 @@
 + (NSString *)lj_filterSpecialString:(NSString *)string;
 
 /**
- 通讯录的名字处理
+ 字符串转拼音
 
- @param string 名字
- @return 处理过的名字
+ @param string 字符串
+ @return 拼音
  */
-+ (NSString *)lj_firstCharacterWithString:(NSString *)string;
++ (NSString *)lj_pinyinForString:(NSString *)string;
 
 @end

@@ -31,6 +31,11 @@ typedef NS_ENUM(NSUInteger, LJContactType)
 @property (nonatomic, copy) NSString *fullName;
 
 /**
+ 姓名拼音
+ */
+@property (nonatomic, copy) NSString *pinyin;
+
+/**
  姓
  */
 @property (nonatomic, copy) NSString *familyName;

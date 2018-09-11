@@ -465,7 +465,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
                 
             });
             
-            return ;
+            return;
         }
         
         [self _sortNameWithDatas:datas completcion:^(NSArray *persons, NSArray *keys) {
@@ -490,7 +490,22 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
     
     for (LJPerson *person in datas)
     {
-        NSString *firstLetter = [NSString lj_firstCharacterWithString:person.fullName];
+        // 拼音首字母
+        NSString *firstLetter = nil;
+        
+        if (person.fullName.length == 0)
+        {
+            firstLetter = @"#";
+        }
+        else
+        {
+            NSString *pinyinString = [NSString lj_pinyinForString:person.fullName];
+            person.pinyin = pinyinString;
+            NSString *upperStr = [[pinyinString substringToIndex:1] uppercaseString];
+            NSString *regex = @"^[A-Z]$";
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+            firstLetter = [predicate evaluateWithObject:upperStr] ? upperStr : @"#";
+        }
         
         if (dict[firstLetter])
         {
@@ -499,7 +514,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
         else
         {
             NSMutableArray *arr = [NSMutableArray arrayWithObjects:person, nil];
-            [dict setValue:arr forKey:firstLetter];
+            dict[firstLetter] = arr;
         }
     }
     
@@ -517,7 +532,15 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
         
         LJSectionPerson *person = [LJSectionPerson new];
         person.key = key;
-        person.persons = dict[key];
+        
+        // 组内按照拼音排序
+        NSArray *personsArr = [dict[key] sortedArrayUsingComparator:^NSComparisonResult(LJPerson *person1, LJPerson *person2) {
+            
+            NSComparisonResult result = [person1.pinyin compare:person2.pinyin];
+            return result;
+        }];
+        
+        person.persons = personsArr;
         
         [persons addObject:person];
     }];
