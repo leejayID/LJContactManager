@@ -39,7 +39,7 @@
     if (self)
     {
         _queue = dispatch_queue_create("com.addressBook.queue", DISPATCH_QUEUE_SERIAL);
-
+        
         if (IOS9_OR_LATER)
         {
             _contactStore = [CNContactStore new];
@@ -90,7 +90,7 @@
                   CNContactSocialProfilesKey,
                   CNContactRelationsKey,
                   CNContactUrlAddressesKey];
-
+        
     }
     return _keys;
 }
@@ -164,14 +164,14 @@
     self.isAdd = YES;
     self.pickerDelegate.phoneNum = phoneNum;
     self.pickerDelegate.controller = controller;
-   
+    
     [self _presentFromController:controller];
 }
 
 - (void)accessContactsComplection:(void (^)(BOOL, NSArray<LJPerson *> *))completcion
 {
     [self requestAddressBookAuthorization:^(BOOL authorization) {
-    
+        
         if (authorization)
         {
             if (IOS9_OR_LATER)
@@ -187,7 +187,7 @@
             else
             {
                 [self _asynAccessAddressBookWithSort:NO completcion:^(NSArray *datas, NSArray *keys) {
-                
+                    
                     if (completcion)
                     {
                         completcion(YES, datas);
@@ -344,7 +344,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
         }
         
         pc.displayedPropertyKeys = @[CNContactPhoneNumbersKey];
-
+        
         [self requestAddressBookAuthorization:^(BOOL authorization) {
             if (authorization)
             {
@@ -352,7 +352,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
             }
             else
             {
-                [self _showAlert];
+                [self _showAlertFromController:controller];
             }
         }];
     }
@@ -378,17 +378,31 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
             }
             else
             {
-                [self _showAlert];
+                [self _showAlertFromController:controller];
             }
             
         }];
     }
 }
 
-- (void)_showAlert
+- (void)_showAlertFromController:(UIViewController *)controller
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"您的通讯录暂未允许访问，请去设置->隐私里面授权!" delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-    [alert show];
+    UIAlertController *alertControl = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"您的通讯录暂未允许访问，请去设置->隐私里面授权!" preferredStyle:UIAlertControllerStyleAlert];
+    [alertControl addAction:([UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }])];
+    [alertControl addAction:([UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            if (@available(iOS 10.0, *)) {
+                [[UIApplication sharedApplication] openURL:url options:@{}
+                                         completionHandler:^(BOOL success) {
+                                         }];
+            } else {
+                [[UIApplication sharedApplication] openURL:url];
+            }
+        }
+    }])];
+    [controller presentViewController:alertControl animated:YES completion:nil];
 }
 
 - (void)_asynAccessAddressBookWithSort:(BOOL)isSort completcion:(void (^)(NSArray *, NSArray *))completcion
@@ -469,7 +483,7 @@ void _blockExecute(void (^completion)(BOOL authorizationA), BOOL authorizationB)
         }
         
         [self _sortNameWithDatas:datas completcion:^(NSArray *persons, NSArray *keys) {
-           
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 
                 if (completcion)
@@ -585,3 +599,5 @@ void _addressBookChange(ABAddressBookRef addressBook, CFDictionaryRef info, void
 }
 
 @end
+
+
