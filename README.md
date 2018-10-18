@@ -93,29 +93,13 @@ LJContanctManager 是一款操作通讯录的类库，iOS 9 之前使用的是 A
 
 ![](http://upload-images.jianshu.io/upload_images/1321491-a4df44dca74e8f47.gif?imageMogr2/auto-orient/strip)
 
-* 通讯录变更回调（未分组的通讯录）
+* 通讯录变更回调
 
 ```objc
 /**
- 通讯录变更回调（未分组的通讯录）
- 
- @param succeed 是否成功
- @param newContacts  联系人列表（未分组）
+ 通讯录变更回调
  */
-typedef void (^LJContactChangeHanlder) (BOOL succeed, NSArray <LJPerson *> *newContacts);
-```
-
-* 通讯录变更回调（已分组的通讯录）
-
-```objc
-/**
- 通讯录变更回调（已分组的通讯录）
- 
- @param succeed 是否成功
- @param newSectionContacts 联系人列表（已分组）
- @param keys 所有联系人的分区标题
- */
-typedef void (^LJSectionContactChangeHanlder) (BOOL succeed, NSArray <LJSectionPerson *> *newSectionContacts, NSArray <NSString *> *keys);
+@property (nonatomic, copy) LJContactChangeHandler contactChangeHandler;
 ```
 
 ## 系统要求
