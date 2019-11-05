@@ -76,7 +76,6 @@
                   CNContactOrganizationNameKey,
                   CNContactDepartmentNameKey,
                   CNContactJobTitleKey,
-                  CNContactNoteKey,
                   CNContactPhoneticGivenNameKey,
                   CNContactPhoneticFamilyNameKey,
                   CNContactPhoneticMiddleNameKey,
